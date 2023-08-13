@@ -10,7 +10,7 @@ import (
 
 var wg sync.WaitGroup
 
-// 初始的例子
+/* // 初始的例子
 func worker() {
 	for {
 		fmt.Println("worker")
@@ -18,9 +18,9 @@ func worker() {
 	}
 	//如何接收外部的命令实现退出
 	wg.Done()
-}
+} */
 
-// 使用全局变量的方法控制
+/* // 使用全局变量的方法控制
 var exit bool
 
 func worker2() {
@@ -34,7 +34,7 @@ func worker2() {
 	}
 	//如何接收外部的命令实现退出
 	wg.Done()
-}
+} */
 
 // 使用管道的方式来处理
 // 管道方式存在的问题：
