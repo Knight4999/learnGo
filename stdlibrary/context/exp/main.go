@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -10,7 +11,7 @@ import (
 
 var wg sync.WaitGroup
 
-/* // 初始的例子
+// 初始的例子
 func worker() {
 	for {
 		fmt.Println("worker")
@@ -18,9 +19,9 @@ func worker() {
 	}
 	//如何接收外部的命令实现退出
 	wg.Done()
-} */
+}
 
-/* // 使用全局变量的方法控制
+// 使用全局变量的方法控制
 var exit bool
 
 func worker2() {
@@ -34,7 +35,7 @@ func worker2() {
 	}
 	//如何接收外部的命令实现退出
 	wg.Done()
-} */
+}
 
 // 使用管道的方式来处理
 // 管道方式存在的问题：
@@ -53,6 +54,34 @@ LOOP:
 	wg.Done()
 }
 
+// 官方推荐的方式
+func worker4(c context.Context) {
+LOOP:
+	for {
+		fmt.Println("worker")
+		time.Sleep(time.Second)
+		select {
+		case <-c.Done(): // 等待上级通知
+			break LOOP
+		default:
+		}
+	}
+}
+
+func worker5(c context.Context) {
+	go worker4(c)
+LOOP:
+	for {
+		fmt.Println("worker5")
+		time.Sleep(time.Second)
+		select {
+		case <-c.Done(): // 等待上级通知
+			break LOOP
+		default:
+		}
+	}
+	wg.Done()
+}
 func main() {
 	wg.Add(1)
 	/* go worker()
@@ -62,12 +91,17 @@ func main() {
 	time.Sleep(3 * time.Second) // sleep3秒以免程序过快退出
 	exit = true                 // 修改全局变量实现子goroutine的退出 */
 
-	var exitChan = make(chan struct{})
+	/*var exitChan = make(chan struct{})
 
 	go worker3(exitChan)
 	time.Sleep(time.Second * 3) // sleep3秒以免程序过快退出
 	exitChan <- struct{}{}      // 给子goroutine发送退出信号
-	close(exitChan)
+	close(exitChan)*/
+
+	cxt, cancel := context.WithCancel(context.Background())
+	go worker5(cxt)
+	time.Sleep(3 * time.Second)
+	cancel() //// 通知子goroutine结束
 
 	wg.Wait()
 	fmt.Println("over")

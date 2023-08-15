@@ -2,7 +2,7 @@ package main
 
 //泛型内容3，接口相关
 
-// basic interface,只包含方法体的方法
+// with_value interface,只包含方法体的方法
 type animal interface {
 	run()
 	move()
