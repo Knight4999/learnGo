@@ -32,7 +32,7 @@ func initDB() (err error) {
 // DB.NamedExec方法用来绑定SQL语句与结构体或map中的同名字段。
 func insertUserDemo() (err error) {
 	sqlstr := "INSERT INTO user(name,age) VALUES (:name,:age)"
-	_, err = db.Exec(sqlstr, map[string]interface{}{
+	_, err = db.NamedExec(sqlstr, map[string]interface{}{
 		"name": "李火旺",
 		"age":  18,
 	})
@@ -43,7 +43,7 @@ func insertUserDemo() (err error) {
 func namedQuery() {
 	sqlStr := "SELECT * FROM user WHERE name=:name"
 	// 使用map做命名查询
-	rows, err := db.NamedQuery(sqlStr, map[string]interface{}{"name": "七米"})
+	rows, err := db.NamedQuery(sqlStr, map[string]interface{}{"name": "Ame"})
 	if err != nil {
 		fmt.Printf("db.NamedQuery failed, err:%v\n", err)
 		return
@@ -60,7 +60,7 @@ func namedQuery() {
 	}
 
 	u := user{
-		Name: "七米",
+		Name: "Ame",
 	}
 	// 使用结构体命名查询，根据结构体字段的 db tag进行映射
 	rows, err = db.NamedQuery(sqlStr, u)
@@ -80,5 +80,14 @@ func namedQuery() {
 	}
 }
 func main() {
-
+	err := initDB()
+	if err != nil {
+		fmt.Printf("init database failed:", err)
+	}
+	err = insertUserDemo()
+	if err != nil {
+		fmt.Printf("fialed:", err)
+		return
+	}
+	namedQuery()
 }

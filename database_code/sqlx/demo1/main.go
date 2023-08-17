@@ -70,6 +70,7 @@ func insertDemo() {
 	}
 	fmt.Printf("insert success, the id is %d.\n", theID)
 }
+
 func main() {
 	err := initDB()
 	if err != nil {
