@@ -15,7 +15,7 @@ var ctx, cancel = context.WithTimeout(context.Background(), 500*time.Millisecond
 
 func initDB() {
 	rds = redis.NewClient(&redis.Options{
-		Addr:     "192.168.40.196:6379",
+		Addr:     "192.168.100.196:6379",
 		Password: "",
 		DB:       0,
 		PoolSize: 20,
@@ -60,6 +60,14 @@ func zestDemo() {
 	op := &redis.ZRangeBy{
 		Min: "95",
 		Max: "100",
+	}
+	ret, err = rds.ZRangeByScoreWithScores(ctx, zestKey, op).Result()
+	if err != nil {
+		fmt.Printf("zrangebyscore failed, err:%v\n", err)
+		return
+	}
+	for _, z := range ret {
+		fmt.Println(z.Member, z.Score)
 	}
 }
 

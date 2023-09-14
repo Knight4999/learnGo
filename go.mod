@@ -9,4 +9,5 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/redis/go-redis/v9 v9.1.0 // indirect
+	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 )
